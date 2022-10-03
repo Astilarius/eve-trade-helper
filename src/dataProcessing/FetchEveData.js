@@ -1,3 +1,5 @@
+import {buyData, sellData} from '../Body';
+
 //download orders from single region
 async function FetchEveData(region, isSell = true){
     var url;
@@ -18,9 +20,9 @@ async function FetchEveData(region, isSell = true){
     console.log(`total pages = ${currentxpages}`);
 
     if (isSell){
-        sellData = sellData.concat(json);
+        sellData.push(json);
     } else {
-        buyData = buyData.concat(json);
+        buyData.push(json);
     }
     //data = data.concat(json);
     for (let i = 2; i < (currentxpages); i++){
@@ -41,12 +43,12 @@ async function FetchEveData(region, isSell = true){
         .then(resp => resp.json())
         .then(json => {
         if (isSell){
-            sellData = sellData.concat(json);
+            sellData.push(json);
         } else {
-            buyData = buyData.concat(json);
+            buyData.push(json);
         }
-        })
-        .then(setCount(`sell:${sellData.length} buy:${buyData.length}`));
+        });
+        // .then(setCount(`sell:${sellData.length} buy:${buyData.length}`));
         promises.push(promise);
     }
     await Promise.allSettled(promises)

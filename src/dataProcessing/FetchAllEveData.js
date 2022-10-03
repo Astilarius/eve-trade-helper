@@ -1,5 +1,6 @@
 import systems from '../data/systems';
-import FetchEveData from '../dataProcessing/FetchEveData';
+import FetchEveData from './FetchEveData';
+import {buyData, sellData} from '../Body';
 
 //download orders from all regions that we care about (where security >= 0)
 async function FetchAllEveData(region){
@@ -39,7 +40,7 @@ async function FetchAllEveData(region){
         return;
       }
     }));
-    setCount(`sell:${sellData.length} buy:${buyData.length}`);
+    // setCount(`sell:${sellData.length} buy:${buyData.length}`);
     console.log(`low security = ${low_security}`);
     console.log(`new size sell:${sellData.length} buy:${buyData.length}`);
   }
