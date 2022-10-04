@@ -1,6 +1,7 @@
 import { Buffer } from "buffer";
 import { client_id, secret_key, url } from "D:/VScode/private_data";
 import getNameFromID from "../dataProcessing/getNameFromID";
+import systems from '../data/systems'
 
 async function Login(auth_code) {
     let loginData = {
@@ -31,7 +32,25 @@ async function Login(auth_code) {
         'Authorization': `Basic ${secret}`,
         'Content-Type': 'application/x-www-form-urlencoded'
     }
-    }).then(data => {return data.json()});
+    })
+    .then(res =>{
+        console.log(res);
+        if (!res.ok){
+            console.log("login failed");
+            return "error";
+        } else {
+            return res.json();
+        }
+    });
+    if (res === "error"){
+        return {
+            user_capacity:null, 
+            user_balance:null, 
+            user_tax:null, 
+            user_system:null,
+            sec:null,
+        };
+    }
     var access_token = res.access_token;
 
     const res2 = await fetch("https://esi.evetech.net/verify/?datasource=tranquility",{
@@ -46,7 +65,6 @@ async function Login(auth_code) {
     .then(res => res.json())
     .then(res => {
     console.log(res);
-    // setClientData(prev => `${prev} Your moneee: ${res}`);
     return res;
     });
 
@@ -55,7 +73,6 @@ async function Login(auth_code) {
     .then(res => getNameFromID(res.ship_type_id))
     .then(res => {
     console.log(res);
-    // setClientData(prev => `${prev} Your ship: ${res.name}`);
     return res;
     });
 
@@ -64,7 +81,6 @@ async function Login(auth_code) {
     .then(res => res.capacity)
     .then(res => {
     console.log(res);
-    // setClientData(prev => `${prev} Your ship's capacity: ${res}`);
     return res;
     });
 
@@ -88,7 +104,8 @@ async function Login(auth_code) {
     // setClientData(prev => `${prev} Your tax: ${0.08*(1-0.11*obj.active_skill_level)}`);
     return tax;
     });
-    return {user_capacity, user_balance, user_tax, user_location};
+    var user_system = systems.find(system => system.id === user_location).system_name;
+    return {user_capacity, user_balance, user_tax, user_system};
     // var user_system = systems.find(system => system.id === user_location);
     // var user_region = regions.find(region => region.id === user_system.system_region_id);
     // localStorage.removeItem('orders');

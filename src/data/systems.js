@@ -1,5 +1,5 @@
 const systems = [
-    {id:30000001,system_name:'Tanoo',system_sec:0.858324,system_region_id:10000001},
+{id:30000001,system_name:'Tanoo',system_sec:0.858324,system_region_id:10000001},
 {id:30000005,system_name:'Sasta',system_sec:0.814337,system_region_id:10000001},
 {id:30000007,system_name:'Yuzier',system_sec:0.906556,system_region_id:10000001},
 {id:30000009,system_name:'Sooma',system_sec:0.577819,system_region_id:10000001},
