@@ -4,10 +4,9 @@ import { client_id, secret_key, url } from "D:/VScode/private_data";
 import systems from './data/systems'
 import Login from "./dataProcessing/Login";
 import FetchAllEveData from './dataProcessing/FetchAllEveData';
+import ProcessOrders from './dataProcessing/ProcessOrders';
 
 function Body() {
-  var loadedSellOrders = [];
-  var loadedBuyOrders = [];
   const [userData, setUserData] = React.useState({
     user_capacity:null,
     user_balance:null,
@@ -72,9 +71,8 @@ function Body() {
     FetchAllEveData(data)
       .then(res=>{
         console.log(res);
-        loadedBuyOrders = loadedBuyOrders.concat(res.buyOrders);
-        loadedSellOrders = loadedSellOrders.concat(res.sellOrders);
-      });
+        ProcessOrders(res.buyOrders, res.sellOrders, data);
+      })
   }
 
   return (

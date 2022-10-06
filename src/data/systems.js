@@ -166,6 +166,7 @@ const systems = [
 {id:30001391,system_name:'Piekura',system_sec:0.505970,system_region_id:10000016},
 {id:30001392,system_name:'Amsen',system_sec:1.000000,system_region_id:10000016},
 {id:30001393,system_name:'Malkalen',system_sec:0.948175,system_region_id:10000016},
+{id:30002567,system_name:'Jorus',system_sec:0.726980,system_region_id:10000030},
 {id:30001394,system_name:'Korama',system_sec:0.770922,system_region_id:10000016},
 {id:30001395,system_name:'Ylandoki',system_sec:0.832837,system_region_id:10000016},
 {id:30001396,system_name:'Aakari',system_sec:0.662230,system_region_id:10000016},
