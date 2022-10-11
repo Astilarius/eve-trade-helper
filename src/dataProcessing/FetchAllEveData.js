@@ -61,26 +61,17 @@ async function FetchAllEveData(userData = {
     })
   // localStorage.setItem('sellOrders', sellOrders);
   // localStorage.setItem('buyOrders', buyOrders);
+  var undefined_items = [];
   console.log(userData);
   console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
   sellOrders = sellOrders.filter(order => order.system_id === userData.system);
   console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
   sellOrders = sellOrders.filter(order => order.price < userData.capital);
   console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
-  sellOrders = sellOrders.filter(order => function(){
+  sellOrders = sellOrders.filter(order =>{
     var order_item = items.find(item => item.id === order.type_id);
     if (order_item === undefined){
-      console.log(order.type_id);
-      getNameTypeID(order.type_id)
-        .then(res => {
-          items.push({
-            id: res.type_id,
-            market_group_id: res.market_group_id,
-            name: res.name,
-            volume: res.volume,
-            group_id: res.group_id,
-          })
-        });
+      undefined_items.indexOf(order.type_id) === -1 ? undefined_items.push(order.type_id) : 0;
       return false
     };
     return order_item.volume < userData.volume
@@ -89,23 +80,64 @@ async function FetchAllEveData(userData = {
   buyOrders = buyOrders.filter(order => {
     var order_item = items.find(item => item.id === order.type_id);
     if (order_item === undefined){
-
-      console.log(order.type_id);
+      undefined_items.indexOf(order.type_id) === -1 ? undefined_items.push(order.type_id) : 0;
       return false
     };
     return order_item.volume < userData.volume;
   });
+  
+  console.log(undefined_items);
   console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
   buyOrders = buyOrders.filter(order => {
     var order_system = systems.find(system => system.id === order.system_id);
     if (order_system === undefined){
-      console.log(order.system_id);
+      console.log(`undefined SYSTEM id = ${order.system_id}`);
       return false
     };
     return order_system.system_sec > 0.45;
   });
   console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
-  return {sellOrders, buyOrders};
+  buyOrders = buyOrders.filter(buy_order => {
+    var sell_order = sellOrders.find(sell_order => sell_order.type_id === buy_order.type_id);
+    if (sell_order === undefined){
+      return false
+    };
+    return true;
+  });
+  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
+  sellOrders = sellOrders.filter(sell_order => {
+    var buy_order = buyOrders.find(buy_order => buy_order.type_id === sell_order.type_id);
+    if (buy_order === undefined){
+      return false
+    };
+    return true;
+  });
+  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
+
+  var sellData = sellOrders.reduce((r, a)=>{//creating sellData object
+    r[a.type_id] = r[a.type_id] || [];
+    r[a.type_id].push(a);
+    return r;
+  }, Object.create(null));
+  for (var item in sellData){//sorting sellData in ascending order
+    sellData[item] = sellData[item].sort((a,b)=>a.price-b.price);
+  };
+  var buyData = buyOrders.reduce((r, a)=>{//grouping buyData by system_id
+      r[a.system_id] = r[a.system_id] || [];
+      r[a.system_id].push(a);
+      return r;
+  }, Object.create(null));
+  console.log(buyData);
+  for(var system in buyData){//grouping buyData by type_id
+    buyData[system] = buyData[system].reduce((r, a)=>{
+        r[a.type_id] = r[a.type_id] || [];
+        r[a.type_id].push(a);
+        return r;
+    }, Object.create(null));
+  };
+
+  console.log({sellData, buyData});
+  return {sellData, buyData};
 }
 
 export default FetchAllEveData

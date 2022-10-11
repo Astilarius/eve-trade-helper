@@ -1313,5 +1313,6 @@ const systems = [
 {id:30045348,system_name:'Notoras',system_sec:0.188791,system_region_id:10000069},
 {id:30045349,system_name:'Rakapas',system_sec:0.222780,system_region_id:10000069},
 {id:30045352,system_name:'Nisuwa',system_sec:0.309433,system_region_id:10000069},
+{id:30005327,system_name:'Chesiette',security_status: 0.572704,system_region_id:10000068},
 ]
 export default systems

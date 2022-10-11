@@ -71,7 +71,7 @@ function Body() {
     FetchAllEveData(data)
       .then(res=>{
         console.log(res);
-        ProcessOrders(res.buyOrders, res.sellOrders, data);
+        ProcessOrders(res.buyData, res.sellData, data);
       })
   }
 
