@@ -37,13 +37,6 @@ async function FetchAllEveData(userData = {
           buyOrders = buyOrders.concat(res);
         });
     }));
-    // await regions.forEach(function (arrayItem) {
-    //   console.log(arrayItem);
-    //   FetchEveData(arrayItem, false)
-    //     .then(res=>{
-    //       buyOrders = buyOrders.concat(res);
-    //     });
-    // })
   } catch(err){
     console.log(err)
   }

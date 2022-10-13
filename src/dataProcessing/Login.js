@@ -52,7 +52,6 @@ async function Login(auth_code) {
         };
     }
     var access_token = res.access_token;
-
     const res2 = await fetch("https://esi.evetech.net/verify/?datasource=tranquility",{
     headers:{
         'Authorization': `Bearer ${access_token}`
@@ -105,47 +104,7 @@ async function Login(auth_code) {
     return tax;
     });
     var user_system = systems.find(system => system.id === user_location).system_name;
-    return {user_capacity, user_balance, user_tax, user_system};
-    // var user_system = systems.find(system => system.id === user_location);
-    // var user_region = regions.find(region => region.id === user_system.system_region_id);
-    // localStorage.removeItem('orders');
-    // await FetchEveData(user_region, true);
-    // console.log(`size sell:${sellData.length} buy:${buyData.length}`);
-    
-    // let wrong_system = 0;
-    // let too_expensive = 0;
-    // let too_bulky = 0;
-    // sellData.forEach(order => {
-    // if(order.system_id !== user_system.id){// sort out all orders that are not in users system
-    //     let index = sellData.indexOf(order);
-    //     wrong_system += 1;
-    //     sellData.splice(index, 1);
-    //     return;
-    // }
-    // if(order.price > user_balance){// sort out all orders where item costs more than user has money
-    //     let index = sellData.indexOf(order);
-    //     too_expensive += 1;
-    //     sellData.splice(index, 1);
-    //     return
-    // }
-    // let order_item = items.find(item => item.id === order.type_id);
-    // if (typeof order_item === 'undefined') {
-    //     return;
-    // }
-    // if(order_item.volume > user_capacity){// sort out all orders where item takes more place than user has available
-    //     let index = sellData.indexOf(order);
-    //     too_bulky += 1;
-    //     sellData.splice(index, 1);
-    //     return;
-    // }
-    // });
-    // // setCount(`sell:${sellData.length} buy:${buyData.length}`);
-    // console.log(sellData);
-    // console.log(`wrong system = ${wrong_system}`);
-    // console.log(`too expensive = ${too_expensive}`);
-    // console.log(`too bulky = ${too_bulky}`);
-    // console.log(`new size sell:${sellData.length} buy:${buyData.length}`);
-
+    return {user_capacity, user_balance, user_tax, user_system, access_token};
 }
 
 export default Login;

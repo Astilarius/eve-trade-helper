@@ -16224,6 +16224,22 @@ const items = [
 {id:33389,market_group_id:1812,name:`Alliance Tournament VIII: HYDRA RELOADED`,volume:0.010000,group_id:1225},
 {id:37551,market_group_id:2004,name:`Navitas Valimor Legacy SKIN`,volume:0.010000,group_id:1950},
 {id:48816,market_group_id:2370,name:`Tengu Storm Bear SKIN`,volume:0.010000,group_id:1950},
+{id:60666,market_group_id:2030,name:`Ashimmu Ironblood SKIN`,volume:0.010000,group_id:1950},
+{id:73408,market_group_id:1663,name:`Halloween Terrors Firework`,volume:0.100000,group_id:500},
+{id:73409,market_group_id:1661,name:`Halloween Terrors Fireworks Crate`,volume:4.000000,group_id:1194},
+{id:33225,market_group_id:1812,name:`Alliance Tournament III: Band of Brothers`,volume:0.010000,group_id:1225},
+{id:33226,market_group_id:1812,name:`Alliance Tournament III: Cult of War`,volume:0.010000,group_id:1225},
+{id:33227,market_group_id:1812,name:`Alliance Tournament IV: HUN Reloaded`,volume:0.010000,group_id:1225},
+{id:33228,market_group_id:1812,name:`Alliance Tournament IV: Star Fraction`,volume:0.010000,group_id:1225},
+{id:33232,market_group_id:1812,name:`Alliance Tournament VIII: Pandemic Legion`,volume:0.010000,group_id:1225},
+{id:33387,market_group_id:1812,name:`Alliance Tournament IV: Pandemic Legion`,volume:0.010000,group_id:1225},
+{id:33388,market_group_id:1812,name:`Alliance Tournament V: Triumvirate`,volume:0.010000,group_id:1225},
+{id:33390,market_group_id:1812,name:`Alliance Tournament VI: R.U.R.`,volume:0.010000,group_id:1225},
+{id:33392,market_group_id:1812,name:`Alliance Tournament X: HUN Reloaded`,volume:0.010000,group_id:1225},
+{id:37595,market_group_id:2097,name:`Anshar Valimor Legacy SKIN`,volume:0.010000,group_id:1950},
+{id:56365,market_group_id:1661,name:`Tranquil Abyssal Filaments Crate`,volume:1.000000,group_id:1194},
+{id:21318,market_group_id:1007,name:`Dark Blood Multifrequency XL`,volume:1.000000,group_id:86},
+{id:50030,market_group_id:1661,name:`Standard 'Ardour' Cerebral Accelerator Blueprint Crate`,volume:4.000000,group_id:1194},
 ];
 
 export default items;

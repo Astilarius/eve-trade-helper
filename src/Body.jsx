@@ -5,7 +5,9 @@ import systems from './data/systems'
 import Login from "./dataProcessing/Login";
 import FetchAllEveData from './dataProcessing/FetchAllEveData';
 import ProcessOrders from './dataProcessing/ProcessOrders';
+import ResultCard from './ResultCard';
 
+var token = '';
 function Body() {
   const [userData, setUserData] = React.useState({
     user_capacity:null,
@@ -14,22 +16,13 @@ function Body() {
     user_system:null,
     sec:null,
   });
-  // const [data,setData] = React.useState(JSON.stringify({
-  //   volume:0,
-  //   capital:0,
-  //   tax:0,
-  //   system:"",
-  // }));
+  const [results, setResults] = React.useState();
   var data;
   const [err,setErr] = React.useState(false);
   const systemItems = systems.map((system) =>
     <option value={system.system_name} key={system.id}/>
   );
 
-  var volume=0;
-  var capital=0;
-  var tax=0;
-  var system="";
   const queryParams = new URLSearchParams(window.location.search);
   const auth_code = queryParams.get("code");
   var logged_in = (auth_code !== null) ? true : false;
@@ -40,6 +33,7 @@ function Body() {
         .then(res => {
           if (res.user_balance !== null){
             console.log("page loaded and you logged in");
+            token = res.access_token;
             setUserData(res);
             console.log(res);
           } else {
@@ -54,13 +48,6 @@ function Body() {
   function handleSubmit(e){
     e.preventDefault();
     let user_system = systems.find(system => system.system_name === e.target[3].value);
-    // setData(JSON.stringify({
-    //   volume:e.target[0].value,
-    //   capital:e.target[1].value,
-    //   tax:e.target[2].value,
-    //   system:user_system.id,
-    //   sec:e.target[4].checked,
-    // }));
     data = {
       volume:e.target[0].value,
       capital:e.target[1].value,
@@ -71,8 +58,20 @@ function Body() {
     FetchAllEveData(data)
       .then(res=>{
         console.log(res);
-        ProcessOrders(res.buyData, res.sellData, data);
-      })
+        ProcessOrders(res.buyData, res.sellData, data)
+        .then(r=>{
+          console.log(r);
+          setResults(r.map(i => {
+            console.log(i);
+            return <ResultCard 
+              obj = {i}
+              token = {token}
+              key = {i.id}
+            />
+          }))
+        })
+      });
+        
   }
 
   return (
@@ -102,6 +101,7 @@ function Body() {
           <button type="submit" >submit</button>
       </form>
       <p>{data}</p>
+      {results}
     </div>
   )
 }

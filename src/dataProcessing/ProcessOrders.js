@@ -1,12 +1,19 @@
 import items from '../data/items'
+import systems from '../data/systems'
 
-function ProcessOrders(buyData, sellData, userData) {
+async function ProcessOrders(buyData, sellData, userData) {
     for (var system in buyData){
+      var tempsys = systems.find(sys => sys.id === Number(system));
       buyData[system] = {//adding 'profit' property to each buyData system
         'items':buyData[system],
         'id':Number(system),
+        'name': tempsys.system_name,
         'profit':0,
         'cart':[],
+        'order_vol':0,
+        'order_price':0,
+        // 'jumps':0,
+        // 'prof_per_jump':0,
       };
       if(Object.keys(buyData[system]['items']).length === 0){//deleting system if there are no items
         console.log('system deleted');
@@ -27,6 +34,7 @@ function ProcessOrders(buyData, sellData, userData) {
           'volume': tempitem.volume,
           'profit': 0,
           'vol_profit': 0,
+          'toClipBoard': ' ',
         };
         buyData[system]['items'][Number(item)]['orders'] = buyData[system]['items'][Number(item)]['orders'].sort((a, b)=>b.price - a.price);
         if (sellData[Number(item)] === undefined){
@@ -37,24 +45,28 @@ function ProcessOrders(buyData, sellData, userData) {
         buyData[system]['items'][Number(item)]['profit'] = buyData[system]['items'][Number(item)]['orders'][0]['price']*(1-userData.tax) - sellData[Number(item)][0]['price'];
         
         if(buyData[system]['items'][Number(item)]['profit'] <= 0){//deleting item if it's profit is < 0
-          // console.log(`${buyData[system]['items'][Number(item)]['profit']} = ${buyData[system]['items'][Number(item)]['orders'][0]['price']} *(1 - ${userData.tax}) - ${sellData[item][0]['price']}`)
           delete buyData[system]['items'][Number(item)];
           continue;
         }
         buyData[system]['items'][Number(item)]['vol_profit'] = buyData[system]['items'][Number(item)]['profit'] / buyData[system]['items'][item]['volume'];
-    //   }
-    // }
-    // console.log(buyData);
       }
       if(Object.keys(buyData[system]['items']).length === 0){//deleting system if it has no items
         delete buyData[system];
         continue;
       }
       var tempvol = userData.volume;//copying user's volume 
+      var tempcap = userData.capital;//copying user's volume 
+      var itemsAmount = 0;
       var lowest_volume = Math.min(...Object.keys(buyData[system]['items'])
         .map(o => buyData[system]['items'][o].volume));
-      while (tempvol > lowest_volume) // until we used up all the volume
+      var lowest_price = Math.min(...Object.keys(buyData[system]['items'])
+        .map(o => buyData[system]['items'][o]['orders'][0].price));
+      while (tempvol > lowest_volume & tempcap > lowest_price) // until we used up all the volume
         {
+            lowest_volume = Math.min(...Object.keys(buyData[system]['items'])
+              .map(o => buyData[system]['items'][o].price));
+            lowest_price = Math.min(...Object.keys(buyData[system]['items'])
+              .map(o => buyData[system]['items'][o]['orders'][0].price));
             if(Object.keys(buyData[system]['items']).length === 0){//skipping system if it has no items
               break;
             }
@@ -69,7 +81,6 @@ function ProcessOrders(buyData, sellData, userData) {
             }
             var buy = buyData[system]['items'][Number(item.id)]['orders'][0];
             var sell = sellData[Number(item.id)][0];
-            // console.log(buy);
             if (sell === undefined){
               console.log(sellData[Number(item.id)]);
               sellData[Number(item.id)].splice(0, 1);
@@ -80,42 +91,51 @@ function ProcessOrders(buyData, sellData, userData) {
               buyData[system]['items'][Number(item.id)]['orders'].splice(0, 1);;
               continue;
             }
-            // console.log(buy);
-            // console.log(buyData[system]);
-            // console.log(buyData[system]['items'][buy.type_id]);
             if (buy['volume_remain'] < sell['volume_remain'])//if buy has less amount than sell
             {
-              buyData[system]['profit'] += buyData[system]['items'][buy.type_id]['profit'] * buy['volume_remain'];//adding its profit to system's profit
+              itemsAmount = item.volume * buy['volume_remain'] > tempvol ? Math.floor(tempvol / item.volume) : buy['volume_remain'];
+              itemsAmount = sell['price'] * itemsAmount > tempcap ? Math.floor(tempcap / sell['price']) : itemsAmount;
+              buyData[system]['profit'] += buyData[system]['items'][buy.type_id]['profit'] * itemsAmount;//adding its profit to system's profit
               buyData[system]['cart'].push({
                 'name':buyData[system]['items'][buy.type_id]['name'],
-                'amount':buy['volume_remain'],
+                'amount':itemsAmount,
               });
-              console.log(`${buyData[system]['profit']} = ${buyData[system]['items'][buy.type_id]['profit']} * ${buy['volume_remain']}`);
-              tempvol -= item.volume * buy['volume_remain'];//decreasing remaining volume
-              sellData[Number(item.id)][0]['volume_remain'] -= buy['volume_remain'];//decreasing remaining amount in sell
+              buyData[system]['order_vol'] += item.volume * itemsAmount;
+              buyData[system]['order_price'] += sell['price'] * itemsAmount;
+              tempvol -= item.volume * itemsAmount;//decreasing remaining volume
+              tempcap -= item.volume * sell['price'];//decreasing remaining moneeeee
+              sellData[Number(item.id)][0]['volume_remain'] -= itemsAmount;//decreasing remaining amount in sell
               buyData[system]['items'][Number(item.id)]['orders'].splice(0, 1);//deleting buy order
             }
             else if (sell['volume_remain'] < buy['volume_remain'])//if sell has less amount than buy
             {
-              buyData[system]['profit'] += buyData[system]['items'][buy.type_id]['profit'] * sell['volume_remain'];//adding its profit to system's profit
+              itemsAmount = item.volume * sell['volume_remain'] > tempvol ? Math.floor(tempvol / item.volume) : sell['volume_remain'];
+              itemsAmount = sell['price'] * itemsAmount > tempcap ? Math.floor(tempcap / sell['price']) : itemsAmount;
+              buyData[system]['profit'] += buyData[system]['items'][buy.type_id]['profit'] * itemsAmount;//adding its profit to system's profit
               buyData[system]['cart'].push({
                 'name':buyData[system]['items'][buy.type_id]['name'],
-                'amount':sell['volume_remain'],
+                'amount':itemsAmount,
               });
-              console.log(`${buyData[system]['profit']} = ${buyData[system]['items'][buy.type_id]['profit']} * ${buy['volume_remain']}`);
-              tempvol -= item.volume * sell['volume_remain'];//decreasing remaining volume
-              buyData[system]['items'][Number(item.id)]['orders'][0]['volume_remain'] -= sell['volume_remain'];//decreasing remaining amount in buy
+              buyData[system]['order_vol'] += item.volume * itemsAmount;
+              buyData[system]['order_price'] += sell['price'] * itemsAmount;
+              tempvol -= item.volume * itemsAmount;//decreasing remaining volume
+              tempcap -= item.volume * sell['price'];//decreasing remaining moneeeee
+              buyData[system]['items'][Number(item.id)]['orders'][0]['volume_remain'] -= itemsAmount;//decreasing remaining amount in buy
               sellData[Number(item.id)].splice(0, 1);//deleting sell order
             } 
             else //if buy and sell amount is equal
             {
-              buyData[system]['profit'] += buyData[system]['items'][buy.type_id]['profit'] * buy['volume_remain'];//adding its profit to system's profit
+              itemsAmount = item.volume * buy['volume_remain'] > tempvol ? Math.floor(tempvol / item.volume) : buy['volume_remain'];
+              itemsAmount = sell['price'] * itemsAmount > tempcap ? Math.floor(tempcap / sell['price']) : itemsAmount;
+              buyData[system]['profit'] += buyData[system]['items'][buy.type_id]['profit'] * itemsAmount;//adding its profit to system's profit
               buyData[system]['cart'].push({
                 'name':buyData[system]['items'][buy.type_id]['name'],
-                'amount':buy['volume_remain'],
+                'amount':itemsAmount,
               });
-              console.log(`${buyData[system]['profit']} = ${buyData[system]['items'][buy.type_id]['profit']} * ${buy['volume_remain']}`);
-              tempvol -= item.volume * buy['volume_remain'];//decreasing remaining volume
+              buyData[system]['order_vol'] += item.volume * itemsAmount;
+              buyData[system]['order_price'] += sell['price'] * itemsAmount;
+              tempvol -= item.volume * itemsAmount;//decreasing remaining volume
+              tempcap -= item.volume * sell['price'];//decreasing remaining moneeeee
               buyData[system]['items'][Number(item.id)]['orders'].splice(0, 1);;//deleting buy order
               sellData[Number(item.id)].splice(0, 1);//deleting sell order
             }
@@ -136,11 +156,22 @@ function ProcessOrders(buyData, sellData, userData) {
             }
         }
     }
-    console.log(buyData);
-    var max_profit_system = Object.keys(buyData)
-    .map(o => buyData[o])
-    .reduce((prev, current) => (+prev.profit > +current.profit) ? prev : current);
-    console.log(max_profit_system);
+    var result = Object.keys(buyData).map((key) => buyData[key]) 
+    console.log(result);
+    await Promise.all(result.map(async (i) => {
+      i['cart'].forEach(cartItem=>{
+        i['toClipBoard'] += `${cartItem.name} ${cartItem.amount} `
+      })
+      await fetch(`https://esi.evetech.net/latest/route/${userData.system}/${i['id']}/?datasource=tranquility&flag=secure`)
+        .then(res => res.json())
+        .then(res => {
+          i['jumps'] = res.length;
+          i['prof_per_jump'] = i['profit'] / i['jumps'];
+        });
+    }));
+    result = result.sort((a, b)=> b['prof_per_jump'] - a['prof_per_jump']); 
+    console.log(result);
+    return result;
 }
 
 export default ProcessOrders;

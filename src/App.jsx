@@ -1,6 +1,5 @@
 import React from 'react'
 import Body from './Body'
-import orders from './data/orders'
 import './App.css'
 
 function App() {
