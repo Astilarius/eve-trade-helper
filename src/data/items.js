@@ -16240,6 +16240,11 @@ const items = [
 {id:56365,market_group_id:1661,name:`Tranquil Abyssal Filaments Crate`,volume:1.000000,group_id:1194},
 {id:21318,market_group_id:1007,name:`Dark Blood Multifrequency XL`,volume:1.000000,group_id:86},
 {id:50030,market_group_id:1661,name:`Standard 'Ardour' Cerebral Accelerator Blueprint Crate`,volume:4.000000,group_id:1194},
+{id:40482,market_group_id:2041,name:`Sabre Tronhadar Ink SKIN`,volume:0.010000,group_id:1950},
+{id:42150,market_group_id:2004,name:`Maulus Serpentis SKIN`,volume:0.010000,group_id:1950},
+{id:42195,market_group_id:2009,name:`Nereus Serpentis SKIN`,volume:0.010000,group_id:1950},
+{id:46018,market_group_id:2076,name:`Broadsword Firewall Breach SKIN`,volume:0.010000,group_id:1950},
+{id:57160,market_group_id:2071,name:`Deimos Yoiul Star SKIN`,volume:0.010000,group_id:1950},
 ];
 
 export default items;

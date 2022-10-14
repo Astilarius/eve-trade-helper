@@ -11,7 +11,7 @@ async function FetchAllEveData(userData = {
   tax:null,
   system:null,
   sec:null,
-}){
+}, setMsg){
   var sellOrders = [];
   var buyOrders = [];
   var expiresDate = new Date(localStorage.getItem('expiresDate'));
@@ -19,12 +19,15 @@ async function FetchAllEveData(userData = {
   console.log(localStorage);
   if (currentDate < expiresDate){
     console.log(`${currentDate} < ${expiresDate}`);
+    setMsg('This service creates a lot of pressure on Eve servers, so in order to keep it in check you can only load data every 5 minutes')
     // sellOrders = localStorage.getItem('sellOrders');
     // buyOrders = localStorage.getItem('buyOrders');
     return null;
   }
   console.log(`${currentDate} > ${expiresDate}`);
+  setMsg('Loading lots of buy orders from eve servers...(usually the longest part)');
 
+  console.log(userData);
   expiresDate = new Date();
   expiresDate.setMinutes(expiresDate.getMinutes()+5);
   localStorage.setItem('expiresDate', expiresDate);
@@ -42,6 +45,7 @@ async function FetchAllEveData(userData = {
   }
   console.log(`BUYS LOADED`)
   
+  setMsg('Loading sell orders from eve servers...');
   console.log(userData);
   var user_system = systems.find(system => system.id === userData.system);
   console.log(user_system);
@@ -51,16 +55,17 @@ async function FetchAllEveData(userData = {
     .then(res=>{
       sellOrders = sellOrders.concat(res);
       console.log(`SELLS LOADED`);
+      setMsg('Sorting out orders that dont fit you...');
     })
-  // localStorage.setItem('sellOrders', sellOrders);
-  // localStorage.setItem('buyOrders', buyOrders);
+
+  setMsg('Sorting out orders that dont fit you...');
   var undefined_items = [];
   console.log(userData);
-  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
+  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length} before sorting out stuff`);
   sellOrders = sellOrders.filter(order => order.system_id === userData.system);
-  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
+  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length} after sorting out sells not in users system`);
   sellOrders = sellOrders.filter(order => order.price < userData.capital);
-  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
+  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length} after sorting out sells that cost more than user has isk`);
   sellOrders = sellOrders.filter(order =>{
     var order_item = items.find(item => item.id === order.type_id);
     if (order_item === undefined){
@@ -69,7 +74,7 @@ async function FetchAllEveData(userData = {
     };
     return order_item.volume < userData.volume
   });
-  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
+  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length} after sorting out sells with too high volume`);
   buyOrders = buyOrders.filter(order => {
     var order_item = items.find(item => item.id === order.type_id);
     if (order_item === undefined){
@@ -80,16 +85,16 @@ async function FetchAllEveData(userData = {
   });
   
   console.log(undefined_items);
-  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
-  buyOrders = buyOrders.filter(order => {
+  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length} after sorting out buys  with too high volume`);
+  buyOrders = userData.sec ? buyOrders.filter(order => {
     var order_system = systems.find(system => system.id === order.system_id);
     if (order_system === undefined){
       console.log(`undefined SYSTEM id = ${order.system_id}`);
       return false
     };
     return order_system.system_sec > 0.45;
-  });
-  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
+  }) : buyOrders;
+  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length} after sorting out buys with too low security`);
   buyOrders = buyOrders.filter(buy_order => {
     var sell_order = sellOrders.find(sell_order => sell_order.type_id === buy_order.type_id);
     if (sell_order === undefined){
@@ -97,7 +102,7 @@ async function FetchAllEveData(userData = {
     };
     return true;
   });
-  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
+  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length} after sorting out buys with items that are not in sells`);
   sellOrders = sellOrders.filter(sell_order => {
     var buy_order = buyOrders.find(buy_order => buy_order.type_id === sell_order.type_id);
     if (buy_order === undefined){
@@ -105,7 +110,7 @@ async function FetchAllEveData(userData = {
     };
     return true;
   });
-  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length}`);
+  console.log(`sellOrders = ${sellOrders.length} buyOrders = ${buyOrders.length} after sorting out sells with items that are not in buys`);
 
   var sellData = sellOrders.reduce((r, a)=>{//creating sellData object
     r[a.type_id] = r[a.type_id] || [];
@@ -120,7 +125,6 @@ async function FetchAllEveData(userData = {
       r[a.system_id].push(a);
       return r;
   }, Object.create(null));
-  console.log(buyData);
   for(var system in buyData){//grouping buyData by type_id
     buyData[system] = buyData[system].reduce((r, a)=>{
         r[a.type_id] = r[a.type_id] || [];
@@ -129,7 +133,6 @@ async function FetchAllEveData(userData = {
     }, Object.create(null));
   };
 
-  console.log({sellData, buyData});
   return {sellData, buyData};
 }
 

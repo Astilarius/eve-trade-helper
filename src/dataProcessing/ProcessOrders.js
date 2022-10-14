@@ -12,6 +12,7 @@ async function ProcessOrders(buyData, sellData, userData) {
         'cart':[],
         'order_vol':0,
         'order_price':0,
+        'toClipBoard': ' ',
         // 'jumps':0,
         // 'prof_per_jump':0,
       };
@@ -34,7 +35,6 @@ async function ProcessOrders(buyData, sellData, userData) {
           'volume': tempitem.volume,
           'profit': 0,
           'vol_profit': 0,
-          'toClipBoard': ' ',
         };
         buyData[system]['items'][Number(item)]['orders'] = buyData[system]['items'][Number(item)]['orders'].sort((a, b)=>b.price - a.price);
         if (sellData[Number(item)] === undefined){
@@ -156,11 +156,10 @@ async function ProcessOrders(buyData, sellData, userData) {
             }
         }
     }
-    var result = Object.keys(buyData).map((key) => buyData[key]) 
-    console.log(result);
+    var result = Object.keys(buyData).map((key) => buyData[key])
     await Promise.all(result.map(async (i) => {
       i['cart'].forEach(cartItem=>{
-        i['toClipBoard'] += `${cartItem.name} ${cartItem.amount} `
+        i['toClipBoard'] += ` ${cartItem.name} ${cartItem.amount} `
       })
       await fetch(`https://esi.evetech.net/latest/route/${userData.system}/${i['id']}/?datasource=tranquility&flag=secure`)
         .then(res => res.json())
@@ -169,8 +168,7 @@ async function ProcessOrders(buyData, sellData, userData) {
           i['prof_per_jump'] = i['profit'] / i['jumps'];
         });
     }));
-    result = result.sort((a, b)=> b['prof_per_jump'] - a['prof_per_jump']); 
-    console.log(result);
+    result = result.sort((a, b)=> b['prof_per_jump'] - a['prof_per_jump']);
     return result;
 }
 

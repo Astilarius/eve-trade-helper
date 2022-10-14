@@ -58,6 +58,7 @@ async function Login(auth_code) {
     }
     }).then(data => {return data.json()})
     var char_id = res2.CharacterID;
+    const CharacterName = res2.CharacterName;
     console.log(char_id);
 
     const user_balance = await fetch(`https://esi.evetech.net/latest/characters/${char_id}/wallet/?datasource=tranquility&token=${access_token}`)
@@ -104,7 +105,7 @@ async function Login(auth_code) {
     return tax;
     });
     var user_system = systems.find(system => system.id === user_location).system_name;
-    return {user_capacity, user_balance, user_tax, user_system, access_token};
+    return {user_capacity, user_balance, user_tax, user_system, access_token, CharacterName};
 }
 
 export default Login;

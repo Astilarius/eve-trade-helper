@@ -6,6 +6,7 @@ import Login from "./dataProcessing/Login";
 import FetchAllEveData from './dataProcessing/FetchAllEveData';
 import ProcessOrders from './dataProcessing/ProcessOrders';
 import ResultCard from './ResultCard';
+import './Body.css'
 
 var token = '';
 function Body() {
@@ -15,10 +16,12 @@ function Body() {
     user_tax:null,
     user_system:null,
     sec:null,
+    CharacterName:null,
   });
   const [results, setResults] = React.useState();
   var data;
   const [err,setErr] = React.useState(false);
+  const [msg, setMsg] = React.useState('');
   const systemItems = systems.map((system) =>
     <option value={system.system_name} key={system.id}/>
   );
@@ -55,54 +58,57 @@ function Body() {
       system:user_system.id,
       sec:e.target[4].checked,
     };
-    FetchAllEveData(data)
+    FetchAllEveData(data, setMsg)
       .then(res=>{
+        setMsg('Calculating result...');
         console.log(res);
         ProcessOrders(res.buyData, res.sellData, data)
         .then(r=>{
-          console.log(r);
           setResults(r.map(i => {
-            console.log(i);
             return <ResultCard 
               obj = {i}
               token = {token}
               key = {i.id}
+              logged_in = {logged_in & !err ? true : false}
             />
           }))
+          setMsg('');
         })
       });
         
   }
 
   return (
-    <div className="App" >
+    <>
+      <div className="Body" >
       {
         logged_in & !err ? 
-        <></> :
+        <span>Logged in as {userData.CharacterName}</span> :
         <div>
           <span>input your data or </span>
           <a href={url}>Log in</a>
         </div>
       }
       <form onSubmit={handleSubmit}>
-          <label htmlFor="volume">Available volume:</label><br/>
-          <input defaultValue={userData.user_capacity} id="volume" name="volume" type="number"/><br/>
-          <label htmlFor="capital">Available capital:</label><br/>
-          <input defaultValue={userData.user_balance} id="capital" name="capital" type="number"/><br/>
-          <label htmlFor="tax">Your sales tax:</label><br/>
-          <input defaultValue={userData.user_tax} step={0.01} id="tax" name="tax" type="number"/><br/>
-          <label htmlFor="system">Your system:</label><br/>
-          <input defaultValue={userData.user_system} id="system" name="system" list="systemList"/>
-          <datalist  id="systemList" name="systemList">
-            {systemItems}
-          </datalist><br/>
-          <label htmlFor="sec">Search only in highsec:</label><br/>
-          <input id="sec" name="sec" type="checkbox"/><br/>
-          <button type="submit" >submit</button>
+        <label htmlFor="volume">Available volume:</label><br/>
+        <input defaultValue={userData.user_capacity} id="volume" name="volume" type="number"/><br/>
+        <label htmlFor="capital">Available capital:</label><br/>
+        <input defaultValue={userData.user_balance} id="capital" name="capital" type="number"/><br/>
+        <label htmlFor="tax">Your sales tax:</label><br/>
+        <input defaultValue={userData.user_tax} step={0.01} id="tax" name="tax" type="number"/><br/>
+        <label htmlFor="system">Your system:</label><br/>
+        <input defaultValue={userData.user_system} id="system" name="system" list="systemList"/>
+        <datalist  id="systemList" name="systemList">
+          {systemItems}
+        </datalist><br/>
+        <label htmlFor="sec">Search only in highsec:</label><br/>
+        <input id="sec" name="sec" type="checkbox"/><br/>
+        <button type="submit" >submit</button>
       </form>
-      <p>{data}</p>
+      <p>{msg}</p>
+      </div>
       {results}
-    </div>
+    </>
   )
 }
 

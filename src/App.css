@@ -1,0 +1,11 @@
+.Title{
+    text-decoration: none;
+    padding-left: 2%;
+}
+.Title:visited{
+    color:white;
+}
+/* .App{
+    background-color: black;
+    color: white;
+} */

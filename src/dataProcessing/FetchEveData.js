@@ -15,10 +15,10 @@ async function FetchEveData(region, userData, isSell = true){
         console.log(`ERROR AT PAGE 1!!!`);
         return;
     }
-    console.log(`page 1 loaded`);
+    console.log(`page 1 of ${region.region} ${isSell ? 'sell' : 'buy'} orders loaded`);
     var json = await response.json();
     const currentxpages = await Number(response.headers.get("x-pages"))+1;
-    console.log(`total pages = ${currentxpages}`);
+    console.log(`total pages = ${currentxpages-1}`);
 
     orders = orders.concat(json);
     //data = data.concat(json);
