@@ -30,6 +30,95 @@ function Body() {
   const auth_code = queryParams.get("code");
   var logged_in = (auth_code !== null) ? true : false;
   var pageloaded = false;
+
+  const [stars, setStars] = React.useState(generateStars());
+  // var stars;
+  // setTimeout(()=>{
+  //   var stars = [];
+  //   var setleft = 0;
+  //   var settop = 0;
+  //   var setrotate = 0;
+  // for(var i = 0; i < 15; i++){
+  //   setleft = Math.floor(Math.random() * 90);
+  //   settop = Math.floor(Math.random() * 90);
+  //   setrotate = Math.floor(Math.random() * 360);
+  //   var star = <div className="star" style={
+  //     {rotate:setrotate,
+  //     left: (setleft)+'%',
+  //     top: (settop)+'%',}}></div>
+  //   stars.push(star)
+  // }
+  // setStars(stars);
+  // },4000);
+  function generateStars(){
+    var stars = [];
+    var setleft = 0;
+    var settop = 0;
+    var setrotate = 0;
+    for(var i = 0; i < 150; i++){
+      setleft = Math.floor(Math.random() * 99);
+      settop = Math.floor(Math.random() * 99);
+      var star=<div className="star" 
+      grows={ Math.random() > 0.5 ? 'false' : 'true'} 
+      key={i}
+      style={
+        {left: (setleft)+'%',
+        top: (settop)+'%',
+        opacity: (Math.floor(Math.random() * 10) / 10)}}>
+      </div>
+      stars.push(star)
+    }
+    return stars;
+  }
+  setTimeout(()=>{
+    var resstars = stars.map(star=>{
+      if(star.props.style['opacity'] > 0.9 & star.props.grows === 'true'){
+        var resstar=<div className="star" 
+        key = {Math.random()}
+        grows={'false'} 
+        style={
+          {left: (star.props.style['left']),
+          top: (star.props.style['top']),
+          opacity: (1)}}>
+        </div>
+        return resstar;
+      } else if (star.props.grows === 'true') {
+        var resstar=<div className="star"  
+        key = {Math.random()}
+        grows={'true'} 
+        style={
+          {left: (star.props.style['left']),
+          top: (star.props.style['top']),
+          opacity: (star.props.style['opacity'] + 0.05)}}>
+        </div>
+        return resstar;
+      }
+      if(star.props.style['opacity'] < 0.1 & star.props.grows === 'false'){
+        var resstar=<div className="star"  
+        key = {Math.random()}
+        grows={'true'} 
+        style={
+          {left: (star.props.style['left']),
+          top: (star.props.style['top']),
+          opacity: (0)}
+        }>
+        </div>
+        return resstar;
+      } else if (star.props.grows === 'false') {
+        var resstar=<div className="star"  
+        key = {Math.random()}
+        grows={'false'} 
+        style={
+          {left: (star.props.style['left']),
+          top: (star.props.style['top']),
+          opacity: (star.props.style['opacity'] - 0.05)}}>
+        </div>
+        return resstar;
+      }
+    });
+    setStars(resstars);
+  },125)
+
   useEffect(() => {
     if (!pageloaded && logged_in) {
       Login(auth_code)
@@ -75,9 +164,7 @@ function Body() {
           setMsg('');
         })
       });
-        
-  }
-
+    }
   return (
     <>
       <div className="Body" >
@@ -85,10 +172,11 @@ function Body() {
         logged_in & !err ? 
         <span>Logged in as {userData.CharacterName}</span> :
         <div>
-          <span>input your data or </span>
+          <span>Input your data or </span>
           <a href={url}>Log in</a>
         </div>
       }
+      {stars}
       <form onSubmit={handleSubmit}>
         <label htmlFor="volume">Available volume:</label><br/>
         <input defaultValue={userData.user_capacity} id="volume" name="volume" type="number"/><br/>

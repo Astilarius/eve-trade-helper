@@ -1,4 +1,13 @@
 #body{
-    background-color: black;
+    background-color: rgb(21, 11, 30);
     color: white;
+}
+
+.star{
+    width: 0.1px;
+    height: 0.1px;
+    border-radius: 100px;
+    position: absolute;
+    border-style: solid;
+    border-color: white;
 }
