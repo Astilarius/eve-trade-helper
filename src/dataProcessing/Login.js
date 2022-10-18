@@ -63,6 +63,7 @@ async function Login(auth_code) {
 
     const user_balance = await fetch(`https://esi.evetech.net/latest/characters/${char_id}/wallet/?datasource=tranquility&token=${access_token}`)
     .then(res => res.json())
+    .then(res => Math.floor(res))
     .then(res => {
     console.log(res);
     return res;

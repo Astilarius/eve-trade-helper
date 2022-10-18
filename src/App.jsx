@@ -7,7 +7,9 @@ function App() {
     <div className="App">
       <h1><a className="Title" href='http://localhost:5173/'>Eve Trade Helper</a></h1>
       <hr/>
-      <Body />
+      <div className='bodyDiv'>
+        <Body />
+      </div>
     </div>
   )
 }

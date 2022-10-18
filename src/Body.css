@@ -1,7 +1,10 @@
 .table{
     border: 1;
 }
-.Body{
-    padding-left: 40%;
-    padding-right: 40%;
+.BodyForm{
+    display: flex;
+    justify-content: center;
 }
+/* .BodyForm{
+    text-align: center;
+} */

@@ -7,6 +7,7 @@ import FetchAllEveData from './dataProcessing/FetchAllEveData';
 import ProcessOrders from './dataProcessing/ProcessOrders';
 import ResultCard from './ResultCard';
 import './Body.css'
+import ChoiceCard from './ChoiceCard';
 
 var token = '';
 function Body() {
@@ -20,6 +21,7 @@ function Body() {
   });
   const [results, setResults] = React.useState();
   var data;
+  var ordersData;
   const [err,setErr] = React.useState(false);
   const [msg, setMsg] = React.useState('');
   const systemItems = systems.map((system) =>
@@ -32,24 +34,6 @@ function Body() {
   var pageloaded = false;
 
   const [stars, setStars] = React.useState(generateStars());
-  // var stars;
-  // setTimeout(()=>{
-  //   var stars = [];
-  //   var setleft = 0;
-  //   var settop = 0;
-  //   var setrotate = 0;
-  // for(var i = 0; i < 15; i++){
-  //   setleft = Math.floor(Math.random() * 90);
-  //   settop = Math.floor(Math.random() * 90);
-  //   setrotate = Math.floor(Math.random() * 360);
-  //   var star = <div className="star" style={
-  //     {rotate:setrotate,
-  //     left: (setleft)+'%',
-  //     top: (settop)+'%',}}></div>
-  //   stars.push(star)
-  // }
-  // setStars(stars);
-  // },4000);
   function generateStars(){
     var stars = [];
     var setleft = 0;
@@ -147,8 +131,9 @@ function Body() {
       system:user_system.id,
       sec:e.target[4].checked,
     };
-    FetchAllEveData(data, setMsg)
+    FetchAllEveData(data, setMsg, ordersData)
       .then(res=>{
+        if(ordersData === res) return;
         setMsg('Calculating result...');
         console.log(res);
         ProcessOrders(res.buyData, res.sellData, data)
@@ -166,37 +151,38 @@ function Body() {
       });
     }
   return (
-    <>
-      <div className="Body" >
-      {
-        logged_in & !err ? 
-        <span>Logged in as {userData.CharacterName}</span> :
-        <div>
-          <span>Input your data or </span>
-          <a href={url}>Log in</a>
-        </div>
-      }
-      {stars}
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="volume">Available volume:</label><br/>
-        <input defaultValue={userData.user_capacity} id="volume" name="volume" type="number"/><br/>
-        <label htmlFor="capital">Available capital:</label><br/>
-        <input defaultValue={userData.user_balance} id="capital" name="capital" type="number"/><br/>
-        <label htmlFor="tax">Your sales tax:</label><br/>
-        <input defaultValue={userData.user_tax} step={0.01} id="tax" name="tax" type="number"/><br/>
-        <label htmlFor="system">Your system:</label><br/>
-        <input defaultValue={userData.user_system} id="system" name="system" list="systemList"/>
-        <datalist  id="systemList" name="systemList">
-          {systemItems}
-        </datalist><br/>
-        <label htmlFor="sec">Search only in highsec:</label><br/>
-        <input id="sec" name="sec" type="checkbox"/><br/>
-        <button type="submit" >submit</button>
-      </form>
-      <p>{msg}</p>
+    <div className='Body'>
+      <div className="BodyForm">
+        <form onSubmit={handleSubmit}>
+          {
+            logged_in & !err ? 
+            <span>Logged in as {userData.CharacterName}</span> :
+            <p>
+              <span>Input your data or </span>
+              <a href={url}>Log in</a>
+            </p>
+          }
+          <label htmlFor="volume">Available volume:</label><br/>
+          <input defaultValue={userData.user_capacity} id="volume" name="volume" type="number"/><br/>
+          <label htmlFor="capital">Available capital:</label><br/>
+          <input defaultValue={userData.user_balance} id="capital" name="capital" type="number"/><br/>
+          <label htmlFor="tax">Your sales tax:</label><br/>
+          <input defaultValue={userData.user_tax} step={0.01} id="tax" name="tax" type="number"/><br/>
+          <label htmlFor="system">Your system:</label><br/>
+          <input defaultValue={userData.user_system} id="system" name="system" list="systemList"/>
+          <datalist  id="systemList" name="systemList">
+            {systemItems}
+          </datalist><br/>
+          <label htmlFor="sec">Search only in highsec:</label><br/>
+          <input id="sec" name="sec" type="checkbox"/><br/>
+          <button type="submit" >submit</button>
+        </form>
+        <p>{msg}</p>
       </div>
+      {/* <ChoiceCard/> */}
       {results}
-    </>
+      {stars}
+    </div>
   )
 }
 

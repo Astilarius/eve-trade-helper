@@ -11,7 +11,7 @@ async function FetchAllEveData(userData = {
   tax:null,
   system:null,
   sec:null,
-}, setMsg){
+}, setMsg, currentData){
   var sellOrders = [];
   var buyOrders = [];
   var expiresDate = new Date(localStorage.getItem('expiresDate'));
@@ -19,10 +19,9 @@ async function FetchAllEveData(userData = {
   console.log(localStorage);
   if (currentDate < expiresDate){
     console.log(`${currentDate} < ${expiresDate}`);
-    setMsg('This service creates a lot of pressure on Eve servers, so in order to keep it in check you can only load data every 5 minutes')
-    // sellOrders = localStorage.getItem('sellOrders');
-    // buyOrders = localStorage.getItem('buyOrders');
-    return null;
+    var msg = currentData === undefined ? 'You can only load data every 5 minutes' : 'You can only load data every 5 minutes, using old data...';
+    setMsg(msg)
+    return currentData;
   }
   console.log(`${currentDate} > ${expiresDate}`);
   setMsg('Loading lots of buy orders from eve servers...(usually the longest part)');

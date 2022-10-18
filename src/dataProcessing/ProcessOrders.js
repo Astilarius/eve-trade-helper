@@ -38,7 +38,6 @@ async function ProcessOrders(buyData, sellData, userData) {
         };
         buyData[system]['items'][Number(item)]['orders'] = buyData[system]['items'][Number(item)]['orders'].sort((a, b)=>b.price - a.price);
         if (sellData[Number(item)] === undefined){
-          console.log(sellData[Number(item)]);
           delete sellData[Number(item)];
           continue;
         }
@@ -151,7 +150,7 @@ async function ProcessOrders(buyData, sellData, userData) {
             // calculating new profit for this item
             buyData[system]['items'][Number(item.id)]['profit'] = buyData[system]['items'][Number(item.id)]['orders'][0]['price'] * (1 - userData.tax) - sellData[Number(item.id)][0]['price'];
             buyData[system]['items'][Number(item.id)]['vol_profit'] = buyData[system]['items'][Number(item.id)]['profit'] / buyData[system]['items'][Number(item.id)]['volume'];
-            if(buyData[system]['items'][Number(item.id)]['profit'] <= 0){//deleting item if it's profit is < 0
+            if(buyData[system]['items'][Number(item.id)]['profit'] < 0){//deleting item if it's profit is < 0
               delete buyData[system]['items'][Number(item.id)];
             }
         }

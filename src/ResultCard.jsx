@@ -9,6 +9,21 @@ function ResultCard(props) {
   function handleClipboard(){
     navigator.clipboard.writeText(props.obj.toClipBoard)
   }
+  
+  const [routeTip, setRouteTip] = React.useState(<></>);
+  const [clipTip, setClipTip] = React.useState(<></>);
+  function handleRouteHover(){
+    setRouteTip(<p className='RouteTip'>This button sets route to {props.obj.name} in-game</p>)
+  }
+  function handleRouteHoverEnd(){
+    setRouteTip(<></>)
+  }
+  function handleClipHover(){
+    setClipTip(<p className='ClipTip'>This button copies all needed items in your clipboard, so you can paste it in multibuy in-game</p>)
+  }
+  function handleClipHoverEnd(){
+    setClipTip(<></>)
+  }
   return (
     <div className="ResultCard" >
       <h1 className='sysname'>{props.obj.name}</h1>
@@ -17,14 +32,18 @@ function ResultCard(props) {
       <span><b>profit per jump</b> {props.obj.prof_per_jump}isk </span>
       <span><b>total cost:</b> {props.obj.order_price}isk </span>
       <span><b>total volume:</b> {props.obj.order_vol}m3 </span>
-      <span className='buttons'>
+      <div className='buttons'>
         {
           props.logged_in ? 
-          <button className='routeButton' onClick={handleSetRoute}>set route in-game</button> :
-          <> </>
+          <>
+            <button onMouseOver={handleRouteHover} onMouseLeave={handleRouteHoverEnd} className='routeButton' onClick={handleSetRoute}>set route in-game</button>
+            
+          </> : <></>
         }
-        <button className='copyButton' onClick={handleClipboard}>copy cart to clipboard</button>
-      </span>
+        <button onMouseOver={handleClipHover} onMouseLeave={handleClipHoverEnd} className='copyButton' onClick={handleClipboard}>copy cart to clipboard</button>
+        {routeTip}
+        {clipTip}
+      </div>
     </div>
   )
 }
