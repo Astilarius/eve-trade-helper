@@ -134,6 +134,7 @@ function Body() {
     FetchAllEveData(data, setMsg, ordersData)
       .then(res=>{
         if(ordersData === res) return;
+        ordersData = res;
         setMsg('Calculating result...');
         console.log(res);
         ProcessOrders(res.buyData, res.sellData, data)
@@ -176,8 +177,8 @@ function Body() {
           <label htmlFor="sec">Search only in highsec:</label><br/>
           <input id="sec" name="sec" type="checkbox"/><br/>
           <button type="submit" >submit</button>
+          <p>{msg}</p>
         </form>
-        <p>{msg}</p>
       </div>
       {/* <ChoiceCard/> */}
       {results}
