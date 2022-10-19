@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect } from 'react';
-import { client_id, secret_key, url } from "D:/VScode/private_data";
+import { client_id } from "D:/VScode/private_data";
 import systems from './data/systems'
 import Login from "./dataProcessing/Login";
 import FetchAllEveData from './dataProcessing/FetchAllEveData';
@@ -9,8 +9,12 @@ import ResultCard from './ResultCard';
 import './Body.css'
 import ChoiceCard from './ChoiceCard';
 
+const scopes = "esi-location.read_location.v1 esi-location.read_ship_type.v1 esi-skills.read_skills.v1 esi-wallet.read_character_wallet.v1 esi-ui.write_waypoint.v1 esi-markets.structure_markets.v1"
+var url = `https://login.eveonline.com/v2/oauth/authorize/?response_type=code&redirect_uri=${encodeURIComponent("https://astilarius.github.io")}&client_id=${client_id}&scope=${encodeURIComponent(scopes)}&state=teststate`
 var token = '';
+
 function Body() {
+  console.log(url);
   const [userData, setUserData] = React.useState({
     user_capacity:null,
     user_balance:null,
@@ -160,6 +164,7 @@ function Body() {
             <span>Logged in as {userData.CharacterName}</span> :
             <p>
               <span>Input your data or </span>
+              <br/>
               <a href={url}>Log in</a>
             </p>
           }
