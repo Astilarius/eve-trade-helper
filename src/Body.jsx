@@ -161,11 +161,11 @@ function Body() {
         <form onSubmit={handleSubmit}>
           {
             logged_in & !err ? 
-            <span>Logged in as {userData.CharacterName}</span> :
+            <span>Logged in as {userData.CharacterName}<br/></span> :
             <p>
               <span>Input your data or </span>
-              <br/>
               <a href={url}>Log in</a>
+              <br/>
             </p>
           }
           <label htmlFor="volume">Available volume:</label><br/>
