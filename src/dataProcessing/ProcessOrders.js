@@ -150,10 +150,16 @@ async function ProcessOrders(buyData, sellData, userData) {
             // calculating new profit for this item
             buyData[system]['items'][Number(item.id)]['profit'] = buyData[system]['items'][Number(item.id)]['orders'][0]['price'] * (1 - userData.tax) - sellData[Number(item.id)][0]['price'];
             buyData[system]['items'][Number(item.id)]['vol_profit'] = buyData[system]['items'][Number(item.id)]['profit'] / buyData[system]['items'][Number(item.id)]['volume'];
-            if(buyData[system]['items'][Number(item.id)]['profit'] < 0){//deleting item if it's profit is < 0
+            if(buyData[system]['items'][Number(item.id)]['profit'] < 100000){//deleting item if it's profit is < 100000
               delete buyData[system]['items'][Number(item.id)];
             }
         }
+    }
+    console.log(buyData);
+    for(var buy in buyData){
+      if (buyData[buy].profit < 100000){
+        delete buyData[buy];
+      }
     }
     var result = Object.keys(buyData).map((key) => buyData[key])
     await Promise.all(result.map(async (i) => {

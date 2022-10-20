@@ -5,7 +5,7 @@ import './App.css'
 function App() {
   return (
     <div className="App">
-      <h1><a className="Title" href='http://localhost:5173/'>Eve Trade Helper</a></h1>
+      <h1><a className="Title" href='https://astilarius.github.io/'>Eve Trade Helper</a></h1>
       <hr/>
       <div className='bodyDiv'>
         <Body />

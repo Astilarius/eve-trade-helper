@@ -19,8 +19,9 @@ async function FetchAllEveData(userData = {
   console.log(localStorage);
   if (currentDate < expiresDate){
     console.log(`${currentDate} < ${expiresDate}`);
-    var msg = currentData === undefined ? 'You can only load data every 5 minutes' : 'You can only load data every 5 minutes, using old data...';
-    setMsg(msg)
+    console.log(currentData);
+    var msg = (currentData === undefined) ? `You can only load data every 5 minutes, next time - ${expiresDate}` : "You can only load data every 5 minutes, using old data...";
+    setMsg(msg);
     return currentData;
   }
   console.log(`${currentDate} > ${expiresDate}`);

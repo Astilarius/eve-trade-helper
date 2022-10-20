@@ -12,9 +12,9 @@ import ChoiceCard from './ChoiceCard';
 const scopes = "esi-location.read_location.v1 esi-location.read_ship_type.v1 esi-skills.read_skills.v1 esi-wallet.read_character_wallet.v1 esi-ui.write_waypoint.v1 esi-markets.structure_markets.v1"
 var url = `https://login.eveonline.com/v2/oauth/authorize/?response_type=code&redirect_uri=${encodeURIComponent("https://astilarius.github.io")}&client_id=${client_id}&scope=${encodeURIComponent(scopes)}&state=teststate`
 var token = '';
+var ordersData;
 
 function Body() {
-  console.log(url);
   const [userData, setUserData] = React.useState({
     user_capacity:null,
     user_balance:null,
@@ -25,7 +25,6 @@ function Body() {
   });
   const [results, setResults] = React.useState();
   var data;
-  var ordersData;
   const [err,setErr] = React.useState(false);
   const [msg, setMsg] = React.useState('');
   const systemItems = systems.map((system) =>
@@ -137,11 +136,12 @@ function Body() {
     };
     FetchAllEveData(data, setMsg, ordersData)
       .then(res=>{
-        if(ordersData === res) return;
+        console.log(ordersData);
+        if(res === undefined & ordersData === undefined) return;
         ordersData = res;
         setMsg('Calculating result...');
-        console.log(res);
-        ProcessOrders(res.buyData, res.sellData, data)
+        console.log(ordersData);
+        ProcessOrders(ordersData.buyData, ordersData.sellData, data)
         .then(r=>{
           setResults(r.map(i => {
             return <ResultCard 
@@ -159,30 +159,32 @@ function Body() {
     <div className='Body'>
       <div className="BodyForm">
         <form onSubmit={handleSubmit}>
-          {
-            logged_in & !err ? 
-            <span>Logged in as {userData.CharacterName}<br/></span> :
-            <p>
-              <span>Input your data or </span>
-              <a href={url}>Log in</a>
-              <br/>
-            </p>
-          }
-          <label htmlFor="volume">Available volume:</label><br/>
-          <input defaultValue={userData.user_capacity} id="volume" name="volume" type="number"/><br/>
-          <label htmlFor="capital">Available capital:</label><br/>
-          <input defaultValue={userData.user_balance} id="capital" name="capital" type="number"/><br/>
-          <label htmlFor="tax">Your sales tax:</label><br/>
-          <input defaultValue={userData.user_tax} step={0.01} id="tax" name="tax" type="number"/><br/>
-          <label htmlFor="system">Your system:</label><br/>
-          <input defaultValue={userData.user_system} id="system" name="system" list="systemList"/>
-          <datalist  id="systemList" name="systemList">
-            {systemItems}
-          </datalist><br/>
-          <label htmlFor="sec">Search only in highsec:</label><br/>
-          <input id="sec" name="sec" type="checkbox"/><br/>
-          <button type="submit" >submit</button>
-          <p>{msg}</p>
+          <div className='centerMe'>
+            {
+              logged_in & !err ? 
+              <span>Logged in as {userData.CharacterName}<br/></span> :
+              <p>
+                <span>Input your data or </span>
+                <a href={url}>Log in</a>
+                <br/>
+              </p>
+            }
+            <label htmlFor="volume">Available volume:</label><br/>
+            <input defaultValue={userData.user_capacity} id="volume" name="volume" type="number"/><br/>
+            <label htmlFor="capital">Available capital:</label><br/>
+            <input defaultValue={userData.user_balance} id="capital" name="capital" type="number"/><br/>
+            <label htmlFor="tax">Your sales tax:</label><br/>
+            <input defaultValue={userData.user_tax} step={0.01} id="tax" name="tax" type="number"/><br/>
+            <label htmlFor="system">Your system:</label><br/>
+            <input defaultValue={userData.user_system} id="system" name="system" list="systemList"/>
+            <datalist  id="systemList" name="systemList">
+              {systemItems}
+            </datalist><br/>
+            <label htmlFor="sec">Search only in highsec:</label><br/>
+            <input id="sec" name="sec" type="checkbox"/><br/>
+            <button type="submit" >submit</button>
+          </div>
+          <p className='loadmsg'>{msg}</p>
         </form>
       </div>
       {/* <ChoiceCard/> */}
