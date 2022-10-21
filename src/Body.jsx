@@ -23,7 +23,8 @@ function Body() {
     sec:null,
     CharacterName:null,
   });
-  const [results, setResults] = React.useState();
+  const [results, setResults] = React.useState([]);
+  const [todo, setToDo] = React.useState(<></>);
   var data;
   const [err,setErr] = React.useState(false);
   const [msg, setMsg] = React.useState('');
@@ -126,6 +127,7 @@ function Body() {
 
   function handleSubmit(e){
     e.preventDefault();
+
     let user_system = systems.find(system => system.system_name === e.target[3].value);
     data = {
       volume:e.target[0].value,
@@ -137,6 +139,7 @@ function Body() {
     FetchAllEveData(data, setMsg, ordersData)
       .then(res=>{
         console.log(ordersData);
+        console.log(res);
         if(res === undefined & ordersData === undefined) return;
         ordersData = res;
         setMsg('Calculating result...');
@@ -149,6 +152,7 @@ function Body() {
               token = {token}
               key = {i.id}
               logged_in = {logged_in & !err ? true : false}
+              func = {setToDo}
             />
           }))
           setMsg('');
@@ -170,11 +174,11 @@ function Body() {
               </p>
             }
             <label htmlFor="volume">Available volume:</label><br/>
-            <input defaultValue={userData.user_capacity} id="volume" name="volume" type="number"/><br/>
+            <input min={0} defaultValue={userData.user_capacity} id="volume" name="volume" type="number"/><br/>
             <label htmlFor="capital">Available capital:</label><br/>
-            <input defaultValue={userData.user_balance} id="capital" name="capital" type="number"/><br/>
+            <input min={0} defaultValue={userData.user_balance} id="capital" name="capital" type="number"/><br/>
             <label htmlFor="tax">Your sales tax:</label><br/>
-            <input defaultValue={userData.user_tax} step={0.01} id="tax" name="tax" type="number"/><br/>
+            <input min={0} defaultValue={userData.user_tax} step={0.01} id="tax" name="tax" type="number"/><br/>
             <label htmlFor="system">Your system:</label><br/>
             <input defaultValue={userData.user_system} id="system" name="system" list="systemList"/>
             <datalist  id="systemList" name="systemList">
@@ -188,7 +192,26 @@ function Body() {
         </form>
       </div>
       {/* <ChoiceCard/> */}
-      {results}
+      {
+        results.length > 0 ?
+        <div>
+          <div className='todo'>
+            {todo}
+          </div>
+          <table className='resultsTable'>
+            <tr>
+              <th>system name</ th>
+              <th>jumps</th>
+              <th>total profit</th>
+              <th>profit per jump</th>
+              <th>total cost</th>
+              <th>total volume</th>
+              <th>copy cart</th>
+            </tr>
+            {results}
+          </table>
+        </div> : <></>
+      }
       {stars}
     </div>
   )

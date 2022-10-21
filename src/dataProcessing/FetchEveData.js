@@ -44,7 +44,6 @@ async function FetchEveData(region, userData, isSell = true){
         .then(order => {
             orders = orders.concat(order);
         });
-        // .then(setCount(`sell:${sellData.length} buy:${buyData.length}`));
         promises.push(promise);
     }
     await Promise.allSettled(promises)

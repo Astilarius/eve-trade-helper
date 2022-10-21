@@ -13,8 +13,8 @@ async function ProcessOrders(buyData, sellData, userData) {
         'order_vol':0,
         'order_price':0,
         'toClipBoard': ' ',
-        // 'jumps':0,
-        // 'prof_per_jump':0,
+        'jumps':0,
+        'prof_per_jump':0,
       };
       if(Object.keys(buyData[system]['items']).length === 0){//deleting system if there are no items
         console.log('system deleted');
@@ -98,6 +98,7 @@ async function ProcessOrders(buyData, sellData, userData) {
               buyData[system]['cart'].push({
                 'name':buyData[system]['items'][buy.type_id]['name'],
                 'amount':itemsAmount,
+                'system_name':buyData[system]['name'],
               });
               buyData[system]['order_vol'] += item.volume * itemsAmount;
               buyData[system]['order_price'] += sell['price'] * itemsAmount;
@@ -114,6 +115,7 @@ async function ProcessOrders(buyData, sellData, userData) {
               buyData[system]['cart'].push({
                 'name':buyData[system]['items'][buy.type_id]['name'],
                 'amount':itemsAmount,
+                'system_name':buyData[system]['name'],
               });
               buyData[system]['order_vol'] += item.volume * itemsAmount;
               buyData[system]['order_price'] += sell['price'] * itemsAmount;
@@ -130,6 +132,7 @@ async function ProcessOrders(buyData, sellData, userData) {
               buyData[system]['cart'].push({
                 'name':buyData[system]['items'][buy.type_id]['name'],
                 'amount':itemsAmount,
+                'system_name':buyData[system]['name'],
               });
               buyData[system]['order_vol'] += item.volume * itemsAmount;
               buyData[system]['order_price'] += sell['price'] * itemsAmount;
@@ -155,12 +158,6 @@ async function ProcessOrders(buyData, sellData, userData) {
             }
         }
     }
-    console.log(buyData);
-    for(var buy in buyData){
-      if (buyData[buy].profit < 100000){
-        delete buyData[buy];
-      }
-    }
     var result = Object.keys(buyData).map((key) => buyData[key])
     await Promise.all(result.map(async (i) => {
       i['cart'].forEach(cartItem=>{
@@ -169,11 +166,36 @@ async function ProcessOrders(buyData, sellData, userData) {
       await fetch(`https://esi.evetech.net/latest/route/${userData.system}/${i['id']}/?datasource=tranquility&flag=secure`)
         .then(res => res.json())
         .then(res => {
+          i['route'] = res;
           i['jumps'] = res.length;
-          i['prof_per_jump'] = i['profit'] / i['jumps'];
+          i['total_profit'] = i['profit'];
+          i['total_price'] = i['order_price'];
+          i['total_vol'] = i['order_vol'];
+          i['total_cart'] = [];
+          res.forEach(sys => {
+            if (buyData[sys] !== undefined){
+              i.total_profit += buyData[sys].profit;
+              i.total_price += buyData[sys].order_price;
+              i.total_vol += buyData[sys].order_vol;
+              i.total_cart = i.total_cart.concat(buyData[sys].cart);
+            }
+          })
+          i['prof_per_jump'] = i['total_profit'] / i['jumps'];
         });
     }));
+    for(var buy in buyData){
+      for (var sys in buyData[buy].route)
+      if (buyData[sys] !== undefined){
+        buyData[buy].profit += buyData[sys].profit;
+      }
+    }
+    for(var buy in buyData){
+      if (buyData[buy].total_profit < 100000){
+        delete buyData[buy];
+      }
+    }
     result = result.sort((a, b)=> b['prof_per_jump'] - a['prof_per_jump']);
+    console.log(buyData);
     return result;
 }
 

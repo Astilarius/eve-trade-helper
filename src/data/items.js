@@ -16301,6 +16301,13 @@ const items = [
 {id:72866,market_group_id:2487,name:`Basic 'Radiance' Cerebral Accelerator`,volume:1.000000,group_id:303},
 {id:72867,market_group_id:2487,name:`Potent 'Radiance' Cerebral Accelerator`,volume:1.000000,group_id:303},
 {id:72868,market_group_id:2487,name:`Extended 'Radiance' Cerebral Accelerator`,volume:1.000000,group_id:303},
+{id:37171,market_group_id:2348,name:`Standup L-Set Equipment Manufacturing Efficiency II`,volume:20.000000,group_id:1850},        
+{id:37275,market_group_id:2346,name:`Standup XL-Set Extinction Level Weapons Suite II`,volume:40.000000,group_id:1642},
+{id:60668,market_group_id:2002,name:`Punisher Blood Raiders SKIN`,volume:0.010000,group_id:1950},
+{id:60669,market_group_id:2051,name:`Purifier Blood Raiders SKIN`,volume:0.010000,group_id:1950},
+{id:60670,market_group_id:1990,name:`Maller Blood Raiders SKIN`,volume:0.010000,group_id:1950},
+{id:60678,market_group_id:2051,name:`Purifier Sarum SKIN`,volume:0.010000,group_id:1950},
+{id:60679,market_group_id:1990,name:`Maller Sarum SKIN`,volume:0.010000,group_id:1950},
 ];
 
 export default items;

@@ -7,7 +7,9 @@ function ResultCard(props) {
     setRoute(props.token, props.obj.id);
   }
   function handleClipboard(){
-    navigator.clipboard.writeText(props.obj.toClipBoard)
+    console.log(props.obj);
+    props.func(props.obj.total_cart.map(item => <p>{`sell ${item.amount} ${item.name} in ${item.system_name}`}</p>))
+    // navigator.clipboard.writeText(props.obj.toClipBoard)
   }
   
   const [routeTip, setRouteTip] = React.useState(<></>);
@@ -25,14 +27,14 @@ function ResultCard(props) {
     setClipTip(<></>)
   }
   return (
-    <div className="ResultCard" >
-      <h1 className='sysname'>{props.obj.name}</h1>
-      <span><b>jumps:</b> {props.obj.jumps} </span>
-      <span><b>total profit:</b> {props.obj.profit}isk </span>
-      <span><b>profit per jump</b> {props.obj.prof_per_jump}isk </span>
-      <span><b>total cost:</b> {props.obj.order_price}isk </span>
-      <span><b>total volume:</b> {props.obj.order_vol}m3 </span>
-      <div className='buttons'>
+    <tr className="ResultCard" >
+      <td><h2 className='sysname'>{props.obj.name}</h2></td>
+      <td><span>{props.obj.jumps} </span></td>
+      <td><span>{Math.floor(props.obj.total_profit)}isk </span></td>
+      <td><span>{Math.floor(props.obj.prof_per_jump)}isk </span></td>
+      <td><span>{Math.floor(props.obj.total_price)}isk </span></td>
+      <td><span>{props.obj.total_vol}m3 </span></td>
+      <td><div className='buttons'>
         {
           props.logged_in ? 
           <>
@@ -40,11 +42,12 @@ function ResultCard(props) {
             
           </> : <></>
         }
-        <button onMouseOver={handleClipHover} onMouseLeave={handleClipHoverEnd} className='copyButton' onClick={handleClipboard}>copy cart to clipboard</button>
+        <button className='copyButton' onClick={handleClipboard}>copy cart to clipboard</button>
         {routeTip}
         {clipTip}
       </div>
-    </div>
+      </td>
+    </tr>
   )
 }
 
