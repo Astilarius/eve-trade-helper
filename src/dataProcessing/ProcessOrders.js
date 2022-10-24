@@ -99,6 +99,9 @@ async function ProcessOrders(buyData, sellData, userData) {
                 'name':buyData[system]['items'][buy.type_id]['name'],
                 'amount':itemsAmount,
                 'system_name':buyData[system]['name'],
+                'profit':buyData[system]['items'][buy.type_id]['profit'] * itemsAmount,
+                'item_volume':buyData[system]['items'][Number(item.id)]['volume'],
+                'price':sell['price'],
               });
               buyData[system]['order_vol'] += item.volume * itemsAmount;
               buyData[system]['order_price'] += sell['price'] * itemsAmount;
@@ -116,6 +119,9 @@ async function ProcessOrders(buyData, sellData, userData) {
                 'name':buyData[system]['items'][buy.type_id]['name'],
                 'amount':itemsAmount,
                 'system_name':buyData[system]['name'],
+                'profit':buyData[system]['items'][buy.type_id]['profit'] * itemsAmount,
+                'item_volume':buyData[system]['items'][Number(item.id)]['volume'],
+                'price':sell['price'],
               });
               buyData[system]['order_vol'] += item.volume * itemsAmount;
               buyData[system]['order_price'] += sell['price'] * itemsAmount;
@@ -133,6 +139,9 @@ async function ProcessOrders(buyData, sellData, userData) {
                 'name':buyData[system]['items'][buy.type_id]['name'],
                 'amount':itemsAmount,
                 'system_name':buyData[system]['name'],
+                'profit':buyData[system]['items'][buy.type_id]['profit'] * itemsAmount,
+                'item_volume':buyData[system]['items'][Number(item.id)]['volume'],
+                'price':sell['price'],
               });
               buyData[system]['order_vol'] += item.volume * itemsAmount;
               buyData[system]['order_price'] += sell['price'] * itemsAmount;
@@ -184,19 +193,32 @@ async function ProcessOrders(buyData, sellData, userData) {
         });
     }));
     for(var buy in buyData){
-      for (var sys in buyData[buy].route)
-      if (buyData[sys] !== undefined){
-        buyData[buy].profit += buyData[sys].profit;
-      }
-    }
-    for(var buy in buyData){
       if (buyData[buy].total_profit < 100000){
         delete buyData[buy];
       }
     }
+
     result = result.sort((a, b)=> b['prof_per_jump'] - a['prof_per_jump']);
-    console.log(buyData);
+    console.log(result);
+
+    // for (var system in result){
+    //   while (result[system].total_vol > userData.volume | result[system].total_price > userData.capital){
+    //     console.log(result[system]); 
+    //     var cartItem = result[system].total_cart
+    //       .reduce((prev, current) => (+(prev.profit/prev.item_volume) < +(current.profit/current.item_volume)) ? prev : current);
+    //     console.log(cartItem); 
+    //     result[system].total_profit -= cartItem.profit * cartItem.amount;
+    //     result[system].total_vol -= cartItem.item_volume * cartItem.amount;
+    //     result[system].total_price -= cartItem.price * cartItem.amount;
+    //     let index = result[system].total_cart.indexOf(cartItem);
+    //     delete result[system].total_cart[index]
+    //   }
+    // }
+
+    result = result.sort((a, b)=> b['prof_per_jump'] - a['prof_per_jump']);
+    console.log(result);
     return result;
 }
+
 
 export default ProcessOrders;

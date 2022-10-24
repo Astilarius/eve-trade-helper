@@ -25,7 +25,7 @@ async function FetchAllEveData(userData = {
     return currentData;
   }
   console.log(`${currentDate} > ${expiresDate}`);
-  setMsg('Loading lots of buy orders from eve servers...(usually the longest part)');
+  setMsg('Loading buy orders from eve servers...');
 
   console.log(userData);
   expiresDate = new Date();

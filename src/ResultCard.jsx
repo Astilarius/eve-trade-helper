@@ -9,7 +9,11 @@ function ResultCard(props) {
   function handleClipboard(){
     console.log(props.obj);
     props.func(props.obj.total_cart.map(item => <p>{`sell ${item.amount} ${item.name} in ${item.system_name}`}</p>))
-    // navigator.clipboard.writeText(props.obj.toClipBoard)
+    var toclipboard = '';
+    props.obj.total_cart.forEach(item=>{
+      toclipboard += `${item.name} ${item.amount}\n`;
+    });
+    navigator.clipboard.writeText(toclipboard);
   }
   
   const [routeTip, setRouteTip] = React.useState(<></>);
@@ -34,19 +38,18 @@ function ResultCard(props) {
       <td><span>{Math.floor(props.obj.prof_per_jump)}isk </span></td>
       <td><span>{Math.floor(props.obj.total_price)}isk </span></td>
       <td><span>{props.obj.total_vol}m3 </span></td>
-      <td><div className='buttons'>
+      <div className='buttons'>
         {
           props.logged_in ? 
           <>
-            <button onMouseOver={handleRouteHover} onMouseLeave={handleRouteHoverEnd} className='routeButton' onClick={handleSetRoute}>set route in-game</button>
+            <td><button className='routeButton' onClick={handleSetRoute}>set route in-game</button></td>
             
           </> : <></>
         }
-        <button className='copyButton' onClick={handleClipboard}>copy cart to clipboard</button>
+        <td><button className='copyButton' onClick={handleClipboard}>copy cart to clipboard</button></td>
         {routeTip}
         {clipTip}
       </div>
-      </td>
     </tr>
   )
 }

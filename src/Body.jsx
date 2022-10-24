@@ -129,13 +129,20 @@ function Body() {
     e.preventDefault();
 
     let user_system = systems.find(system => system.system_name === e.target[3].value);
-    data = {
-      volume:e.target[0].value,
-      capital:e.target[1].value,
-      tax:e.target[2].value,
-      system:user_system.id,
-      sec:e.target[4].checked,
-    };
+    try{
+      console.log(user_system.id);
+      
+      data = {
+        volume:e.target[0].value,
+        capital:e.target[1].value,
+        tax:e.target[2].value,
+        system:user_system.id,
+        sec:e.target[4].checked,
+      };
+    } catch (TypeError){
+      setMsg(`Could not find system '${e.target[3].value}', please, try again`);
+      return;
+    }
     FetchAllEveData(data, setMsg, ordersData)
       .then(res=>{
         console.log(ordersData);
@@ -174,13 +181,13 @@ function Body() {
               </p>
             }
             <label htmlFor="volume">Available volume:</label><br/>
-            <input min={0} defaultValue={userData.user_capacity} id="volume" name="volume" type="number"/><br/>
+            <input min={0} defaultValue={userData.user_capacity} id="volume" name="volume" type="number" required/><br/>
             <label htmlFor="capital">Available capital:</label><br/>
-            <input min={0} defaultValue={userData.user_balance} id="capital" name="capital" type="number"/><br/>
+            <input min={0} defaultValue={userData.user_balance} id="capital" name="capital" type="number" required/><br/>
             <label htmlFor="tax">Your sales tax:</label><br/>
-            <input min={0} defaultValue={userData.user_tax} step={0.01} id="tax" name="tax" type="number"/><br/>
+            <input min={0} defaultValue={userData.user_tax} step={0.01} id="tax" name="tax" type="number" required/><br/>
             <label htmlFor="system">Your system:</label><br/>
-            <input defaultValue={userData.user_system} id="system" name="system" list="systemList"/>
+            <input defaultValue={userData.user_system} id="system" name="system" list="systemList" required/>
             <datalist  id="systemList" name="systemList">
               {systemItems}
             </datalist><br/>
@@ -207,6 +214,11 @@ function Body() {
               <th>total cost</th>
               <th>total volume</th>
               <th>copy cart</th>
+              {
+                logged_in & !err ? 
+                <th>set route in-game</th> : 
+                <></>
+              }
             </tr>
             {results}
           </table>
