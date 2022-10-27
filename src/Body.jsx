@@ -135,7 +135,7 @@ function Body() {
       data = {
         volume:e.target[0].value,
         capital:e.target[1].value,
-        tax:e.target[2].value,
+        tax:(e.target[2].value/100),
         system:user_system.id,
         sec:e.target[4].checked,
       };
@@ -185,7 +185,7 @@ function Body() {
             <label htmlFor="capital">Available capital:</label><br/>
             <input min={0} defaultValue={userData.user_balance} id="capital" name="capital" type="number" required/><br/>
             <label htmlFor="tax">Your sales tax:</label><br/>
-            <input min={0} defaultValue={userData.user_tax} step={0.01} id="tax" name="tax" type="number" required/><br/>
+            <input min={0} max={100} defaultValue={userData.user_tax} step={0.1} id="tax" name="tax" type="number" required/><br/>
             <label htmlFor="system">Your system:</label><br/>
             <input defaultValue={userData.user_system} id="system" name="system" list="systemList" required/>
             <datalist  id="systemList" name="systemList">

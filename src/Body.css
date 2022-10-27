@@ -4,6 +4,7 @@
 .BodyForm{
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 /* .BodyForm{
     text-align: center;
@@ -13,5 +14,9 @@
 }
 
 .resultsTable{
+    width: 100%;
+}
+
+input{
     width: 100%;
 }

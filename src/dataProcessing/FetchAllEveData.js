@@ -57,7 +57,8 @@ async function FetchAllEveData(userData = {
       console.log(`SELLS LOADED`);
       setMsg('Sorting out orders that dont fit you...');
     })
-
+  console.log(sellOrders);
+  console.log(buyOrders);
   setMsg('Sorting out orders that dont fit you...');
   var undefined_items = [];
   console.log(userData);
