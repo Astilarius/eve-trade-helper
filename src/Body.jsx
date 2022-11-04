@@ -52,60 +52,61 @@ function Body() {
       style={
         {left: (setleft)+'%',
         top: (settop)+'%',
-        opacity: (Math.floor(Math.random() * 10) / 10)}}>
+        opacity: (Math.random() - 1),
+        animationDelay: (Math.random()*3)+'s' }}>
       </div>
       stars.push(star)
     }
     return stars;
   }
-  setTimeout(()=>{
-    var resstars = stars.map(star=>{
-      if(star.props.style['opacity'] > 0.9 & star.props.grows === 'true'){
-        var resstar=<div className="star" 
-        key = {Math.random()}
-        grows={'false'} 
-        style={
-          {left: (star.props.style['left']),
-          top: (star.props.style['top']),
-          opacity: (1)}}>
-        </div>
-        return resstar;
-      } else if (star.props.grows === 'true') {
-        var resstar=<div className="star"  
-        key = {Math.random()}
-        grows={'true'} 
-        style={
-          {left: (star.props.style['left']),
-          top: (star.props.style['top']),
-          opacity: (star.props.style['opacity'] + 0.05)}}>
-        </div>
-        return resstar;
-      }
-      if(star.props.style['opacity'] < 0.1 & star.props.grows === 'false'){
-        var resstar=<div className="star"  
-        key = {Math.random()}
-        grows={'true'} 
-        style={
-          {left: (star.props.style['left']),
-          top: (star.props.style['top']),
-          opacity: (0)}
-        }>
-        </div>
-        return resstar;
-      } else if (star.props.grows === 'false') {
-        var resstar=<div className="star"  
-        key = {Math.random()}
-        grows={'false'} 
-        style={
-          {left: (star.props.style['left']),
-          top: (star.props.style['top']),
-          opacity: (star.props.style['opacity'] - 0.05)}}>
-        </div>
-        return resstar;
-      }
-    });
-    setStars(resstars);
-  },125)
+  // setTimeout(()=>{
+  //   var resstars = stars.map(star=>{
+  //     if(star.props.style['opacity'] > 0.9 & star.props.grows === 'true'){
+  //       var resstar=<div className="star" 
+  //       key = {Math.random()}
+  //       grows={'false'} 
+  //       style={
+  //         {left: (star.props.style['left']),
+  //         top: (star.props.style['top']),
+  //         opacity: (1)}}>
+  //       </div>
+  //       return resstar;
+  //     } else if (star.props.grows === 'true') {
+  //       var resstar=<div className="star"  
+  //       key = {Math.random()}
+  //       grows={'true'} 
+  //       style={
+  //         {left: (star.props.style['left']),
+  //         top: (star.props.style['top']),
+  //         opacity: (star.props.style['opacity'] + 0.05)}}>
+  //       </div>
+  //       return resstar;
+  //     }
+  //     if(star.props.style['opacity'] < 0.1 & star.props.grows === 'false'){
+  //       var resstar=<div className="star"  
+  //       key = {Math.random()}
+  //       grows={'true'} 
+  //       style={
+  //         {left: (star.props.style['left']),
+  //         top: (star.props.style['top']),
+  //         opacity: (0)}
+  //       }>
+  //       </div>
+  //       return resstar;
+  //     } else if (star.props.grows === 'false') {
+  //       var resstar=<div className="star"  
+  //       key = {Math.random()}
+  //       grows={'false'} 
+  //       style={
+  //         {left: (star.props.style['left']),
+  //         top: (star.props.style['top']),
+  //         opacity: (star.props.style['opacity'] - 0.05)}}>
+  //       </div>
+  //       return resstar;
+  //     }
+  //   });
+  //   setStars(resstars);
+  // },125)
 
   useEffect(() => {
     if (!pageloaded && logged_in) {
@@ -224,7 +225,8 @@ function Body() {
           </table>
         </div> : <></>
       }
-      {stars}
+      <div className="stars">{stars}</div>
+      
     </div>
   )
 }
