@@ -59,54 +59,6 @@ function Body() {
     }
     return stars;
   }
-  // setTimeout(()=>{
-  //   var resstars = stars.map(star=>{
-  //     if(star.props.style['opacity'] > 0.9 & star.props.grows === 'true'){
-  //       var resstar=<div className="star" 
-  //       key = {Math.random()}
-  //       grows={'false'} 
-  //       style={
-  //         {left: (star.props.style['left']),
-  //         top: (star.props.style['top']),
-  //         opacity: (1)}}>
-  //       </div>
-  //       return resstar;
-  //     } else if (star.props.grows === 'true') {
-  //       var resstar=<div className="star"  
-  //       key = {Math.random()}
-  //       grows={'true'} 
-  //       style={
-  //         {left: (star.props.style['left']),
-  //         top: (star.props.style['top']),
-  //         opacity: (star.props.style['opacity'] + 0.05)}}>
-  //       </div>
-  //       return resstar;
-  //     }
-  //     if(star.props.style['opacity'] < 0.1 & star.props.grows === 'false'){
-  //       var resstar=<div className="star"  
-  //       key = {Math.random()}
-  //       grows={'true'} 
-  //       style={
-  //         {left: (star.props.style['left']),
-  //         top: (star.props.style['top']),
-  //         opacity: (0)}
-  //       }>
-  //       </div>
-  //       return resstar;
-  //     } else if (star.props.grows === 'false') {
-  //       var resstar=<div className="star"  
-  //       key = {Math.random()}
-  //       grows={'false'} 
-  //       style={
-  //         {left: (star.props.style['left']),
-  //         top: (star.props.style['top']),
-  //         opacity: (star.props.style['opacity'] - 0.05)}}>
-  //       </div>
-  //       return resstar;
-  //     }
-  //   });
-  //   setStars(resstars);
-  // },125)
 
   useEffect(() => {
     if (!pageloaded && logged_in) {
@@ -129,7 +81,8 @@ function Body() {
   function handleSubmit(e){
     e.preventDefault();
 
-    let user_system = systems.find(system => system.system_name === e.target[3].value);
+    // let user_system = systems.find(system => system.system_name === e.target[3].value);
+    let user_system = systems.find(system => system.id === 30000142);
     try{
       console.log(user_system.id);
       
@@ -163,7 +116,8 @@ function Body() {
               func = {setToDo}
             />
           }))
-          setMsg('');
+          const newMsg = results.length > 0 ? "" : "Zero results for your input"
+          setMsg(newMsg);
         })
       });
     }

@@ -100,7 +100,7 @@ async function Login(auth_code) {
     let obj = res.skills.find(o => o.skill_id === 16622);
     console.log(obj);
     // setClientData(prev => `${prev} Your accounting level: ${obj.active_skill_level}`);
-    var tax = 0.08*(1-0.11*obj.active_skill_level);
+    var tax = 8*(1-0.11*obj.active_skill_level);
     // setClientData(prev => `${prev} Your tax: ${0.08*(1-0.11*obj.active_skill_level)}`);
     return tax;
     });
