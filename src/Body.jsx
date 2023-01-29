@@ -116,7 +116,7 @@ function Body() {
               func = {setToDo}
             />
           }))
-          const newMsg = results.length > 0 ? "" : "Zero results for your input"
+          const newMsg = r.length > 0 ? "" : "Zero results for your input"
           setMsg(newMsg);
         })
       });
