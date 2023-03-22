@@ -112,7 +112,7 @@ function Body() {
               obj = {i}
               token = {token}
               key = {i.id}
-              logged_in = {logged_in & !err ? true : false}
+              logged_in = {logged_in}
               func = {setToDo}
             />
           }))

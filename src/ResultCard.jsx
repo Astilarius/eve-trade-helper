@@ -39,6 +39,7 @@ function ResultCard(props) {
       <td><span>{Math.floor(props.obj.total_price)}isk </span></td>
       <td><span>{props.obj.total_vol}m3 </span></td>
       <div className='buttons'>
+        <td><button className='copyButton' onClick={handleClipboard}>copy cart to clipboard</button></td>
         {
           props.logged_in ? 
           <>
@@ -46,7 +47,6 @@ function ResultCard(props) {
             
           </> : <></>
         }
-        <td><button className='copyButton' onClick={handleClipboard}>copy cart to clipboard</button></td>
         {routeTip}
         {clipTip}
       </div>
