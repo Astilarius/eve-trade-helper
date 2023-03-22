@@ -38,18 +38,16 @@ function ResultCard(props) {
       <td><span>{Math.floor(props.obj.prof_per_jump)}isk </span></td>
       <td><span>{Math.floor(props.obj.total_price)}isk </span></td>
       <td><span>{props.obj.total_vol}m3 </span></td>
-      <div className='buttons'>
+      {/* <div className='buttons'>
+      </div> */}
         <td><button className='copyButton' onClick={handleClipboard}>copy cart to clipboard</button></td>
         {
           props.logged_in ? 
-          <>
-            <td><button className='routeButton' onClick={handleSetRoute}>set route in-game</button></td>
-            
-          </> : <></>
+          <td><button className='routeButton' onClick={handleSetRoute}>set route in-game</button></td>
+          : <></>
         }
         {routeTip}
         {clipTip}
-      </div>
     </tr>
   )
 }
